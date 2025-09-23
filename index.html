@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineBook - Movie Seat Booker</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for UI enhancements */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .container {
+            /* Adds a 3D perspective to child elements */
+            perspective: 1000px;
+        }
+        .screen {
+            /* Creates the angled screen effect with a glow */
+            transform: rotateX(-45deg);
+            box-shadow: 0 3px 20px rgba(255, 255, 255, 0.7);
+        }
+        .seat:not(.occupied):hover {
+            /* Scale effect on hover for available seats */
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+        .seat.selected {
+            /* Style for selected seats with a gradient */
+            background-image: linear-gradient(to top, #3b82f6, #60a5fa);
+        }
+        .seat.occupied {
+            /* Style for occupied seats */
+            background-color: #4b5563;
+        }
+        /* Custom transition for smooth effects */
+        .seat {
+            transition: transform 0.2s ease-in-out, background-color 0.2s;
+        }
+        /* Style for the main card to give it a glass-like effect */
+        .glass-card {
+            background-color: rgba(31, 41, 55, 0.5); /* bg-gray-800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-gray-900 to-black text-white flex flex-col items-center justify-center min-h-screen p-4">
+
+    <!-- Login Page Container -->
+    <div id="login-page" class="w-full max-w-md">
+        <div class="glass-card p-8 rounded-2xl shadow-2xl">
+            <h2 class="text-3xl font-bold text-center text-white mb-8">Sign In</h2>
+            <form id="login-form">
+                <p id="login-error" class="text-red-400 text-center mb-4 hidden"></p>
+                <div class="mb-4">
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-300">Username</label>
+                    <input type="text" id="username" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="your_username" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
+                    <input type="password" id="password" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-lg">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Container (Initially Hidden) -->
+    <main id="app-container" class="hidden w-full max-w-3xl">
+        <!-- Main Card Container with Glass Effect -->
+        <div class="glass-card p-6 md:p-8 rounded-2xl shadow-2xl w-full mx-auto relative">
+            <button id="logout-btn" class="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105">
+                Logout
+            </button>
+            
+            <!-- Movie Selection Dropdown -->
+            <div class="mb-6 mt-8 flex items-center justify-center space-x-4">
+                <label for="movie" class="text-xl font-medium text-gray-300">Pick a movie:</label>
+                <select id="movie" class="bg-gray-700 border border-gray-600 text-white text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="12">Godzilla x Kong: The New Empire ($12)</option>
+                    <option value="10">Kung Fu Panda 4 ($10)</option>
+                    <option value="15">Dune: Part Two ($15)</option>
+                    <option value="11">Ghostbusters: Frozen Empire ($11)</option>
+                </select>
+            </div>
+
+            <!-- Legend for Seat Status -->
+            <ul class="flex justify-center items-center space-x-6 bg-gray-900/50 p-3 rounded-lg mb-8">
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-gray-700 rounded-t-lg"></div>
+                    <span class="text-sm text-gray-400">Available</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-blue-500 rounded-t-lg" style="background-image: linear-gradient(to top, #3b82f6, #60a5fa);"></div>
+                    <span class="text-sm text-gray-400">Selected</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-gray-600 rounded-t-lg"></div>
+                    <span class="text-sm text-gray-400">Occupied</span>
+                </li>
+            </ul>
+
+            <!-- Theater Layout -->
+            <div class="container mx-auto">
+                <!-- Screen -->
+                <div class="screen bg-white h-16 w-3/4 mx-auto mb-12 rounded"></div>
+
+                <!-- Seats Grid with Aisles -->
+                <div id="seat-container" class="grid grid-cols-12 gap-x-2 gap-y-3 md:gap-x-4 md:gap-y-4 w-max mx-auto">
+                    <!-- Seats will be generated by JavaScript here -->
+                </div>
+            </div>
+
+            <!-- Booking Summary and Action -->
+            <div class="mt-10 border-t border-gray-700 pt-6 flex flex-col items-center">
+                <p class="text-center text-xl text-gray-300 mb-4">
+                    You have selected <span id="count" class="font-bold text-blue-400">0</span> seats for a total price of $<span id="total" class="font-bold text-blue-400">0</span>
+                </p>
+                <button id="book-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-lg">
+                    Book Now
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Booking Confirmation Modal -->
+    <div id="booking-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center hidden">
+        <div class="bg-gray-800 rounded-lg p-8 shadow-xl text-center border border-gray-700">
+            <h2 class="text-2xl font-bold mb-4 text-green-400">Success!</h2>
+            <p id="modal-text" class="text-gray-300 mb-6">Your booking is confirmed.</p>
+            <button id="close-modal-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                Close
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- DOM Elements ---
+        // Login Page Elements
+        const loginPage = document.getElementById('login-page');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
+
+        // Main App Elements
+        const appContainer = document.getElementById('app-container');
+        const logoutBtn = document.getElementById('logout-btn');
+        const seatContainer = document.getElementById('seat-container');
+        const movieSelect = document.getElementById('movie');
+        const count = document.getElementById('count');
+        const total = document.getElementById('total');
+        const bookButton = document.getElementById('book-btn');
+        const modal = document.getElementById('booking-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalText = document.getElementById('modal-text');
+
+        let ticketPrice = +movieSelect.value;
+
+        // --- Seat Generation with Aisles ---
+        function generateSeats() {
+            seatContainer.innerHTML = ''; // Clear existing seats
+            const occupiedSeats = [5, 6, 12, 13, 22, 23, 30, 31, 42, 43, 44, 45]; 
+            let seatIndex = 0;
+
+            for (let i = 0; i < 72; i++) { // 6 rows * 12 columns for aisles
+                const col = i % 12;
+                if (col === 2 || col === 9) { // Adjusted aisle positions
+                    // This is an aisle column
+                    seatContainer.insertAdjacentHTML('beforeend', '<div></div>');
+                } else {
+                    // This is a seat column
+                    const isOccupied = occupiedSeats.includes(seatIndex);
+                    const seatClass = isOccupied ? 'seat occupied' : 'seat';
+                    const seatHTML = `<div class="${seatClass} w-6 h-5 md:w-8 md:h-6 bg-gray-700 rounded-t-lg"></div>`;
+                    seatContainer.insertAdjacentHTML('beforeend', seatHTML);
+                    seatIndex++;
+                }
+            }
+        }
+
+        // --- Update Count and Total ---
+        function updateSelectedCount() {
+            const selectedSeats = document.querySelectorAll('#seat-container .seat.selected');
+            const selectedSeatsCount = selectedSeats.length;
+            count.innerText = selectedSeatsCount;
+            total.innerText = selectedSeatsCount * ticketPrice;
+        }
+        
+        // --- Event Listeners ---
+        
+        // Login Form Submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent page reload
+            loginError.classList.add('hidden'); // Hide error on new submission
+
+            // Basic validation: check if fields are not empty
+            if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
+                loginPage.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+            } else {
+                loginError.innerText = 'Please enter both username and password.';
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        // Logout Button
+        logoutBtn.addEventListener('click', () => {
+            appContainer.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+            // Clear inputs for security
+            usernameInput.value = '';
+            passwordInput.value = '';
+        });
+
+        movieSelect.addEventListener('change', e => {
+            ticketPrice = +e.target.value;
+            updateSelectedCount();
+        });
+
+        seatContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
+                e.target.classList.toggle('selected');
+                updateSelectedCount();
+            }
+        });
+
+        bookButton.addEventListener('click', () => {
+            const selectedSeatsCount = document.querySelectorAll('#seat-container .seat.selected').length;
+            if (selectedSeatsCount > 0) {
+                modalText.innerText = `You have successfully booked ${selectedSeatsCount} seat(s).`;
+                modal.classList.remove('hidden');
+            } else {
+                modalText.innerText = 'Please select at least one seat to book.';
+                modal.classList.remove('hidden');
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            // Reset selection only if seats were actually booked
+            if(document.querySelectorAll('#seat-container .seat.selected').length > 0){
+                 const selectedSeats = document.querySelectorAll('#seat-container .seat.selected');
+                 selectedSeats.forEach(seat => {
+                    seat.classList.remove('selected');
+                    // Bonus: Make booked seats occupied for this session
+                    seat.classList.add('occupied'); 
+                 });
+                 updateSelectedCount();
+            }
+        });
+
+        // --- Initial Setup ---
+        generateSeats();
+        updateSelectedCount();
+    </script>
+</body>
+</html>
+
