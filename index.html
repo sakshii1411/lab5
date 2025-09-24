@@ -3,273 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Netflix Clone</title>
-    <!-- Tailwind CSS CDN -->
+    <title>CineBook - Movie Seat Booker</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Custom styles for UI enhancements */
         body {
             font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
+        .container {
+            /* Adds a 3D perspective to child elements */
+            perspective: 1000px;
         }
-        .hide-scrollbar {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+        .screen {
+            /* Creates the angled screen effect with a glow */
+            transform: rotateX(-45deg);
+            box-shadow: 0 3px 20px rgba(255, 255, 255, 0.7);
         }
-        /* Style for the video player aspect ratio */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        .seat:not(.occupied):hover {
+            /* Scale effect on hover for available seats */
+            cursor: pointer;
+            transform: scale(1.2);
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .seat.selected {
+            /* Style for selected seats with a gradient */
+            background-image: linear-gradient(to top, #3b82f6, #60a5fa);
+        }
+        .seat.occupied {
+            /* Style for occupied seats */
+            background-color: #4b5563;
+        }
+        /* Custom transition for smooth effects */
+        .seat {
+            transition: transform 0.2s ease-in-out, background-color 0.2s;
+        }
+        /* Style for the main card to give it a glass-like effect */
+        .glass-card {
+            background-color: rgba(31, 41, 55, 0.5); /* bg-gray-800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
-<body class="bg-black text-white">
+<body class="bg-gradient-to-b from-gray-900 to-black text-white flex flex-col items-center justify-center min-h-screen p-4">
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 bg-black bg-opacity-70 backdrop-blur-md">
-        <div class="flex items-center space-x-8">
-            <h1 class="text-4xl font-bold text-red-600">NETFLIX</h1>
-            <nav class="hidden md:flex space-x-4 text-sm text-gray-300">
-                <a href="#" class="hover:text-white transition-colors duration-200">Home</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">TV Shows</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">Movies</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">New & Popular</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">My List</a>
-            </nav>
+    <!-- Login Page Container -->
+    <div id="login-page" class="w-full max-w-md">
+        <div class="glass-card p-8 rounded-2xl shadow-2xl">
+            <h2 class="text-3xl font-bold text-center text-white mb-8">Sign In</h2>
+            <form id="login-form">
+                <p id="login-error" class="text-red-400 text-center mb-4 hidden"></p>
+                <div class="mb-4">
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-300">Username</label>
+                    <input type="text" id="username" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="your_username" required>
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
+                    <input type="password" id="password" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="•••••••••" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-lg">
+                    Login
+                </button>
+            </form>
         </div>
-        <div class="flex items-center space-x-4">
-            <button class="text-white hover:text-gray-400 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+    </div>
+
+    <!-- Main App Container (Initially Hidden) -->
+    <main id="app-container" class="hidden w-full max-w-3xl">
+        <!-- Main Card Container with Glass Effect -->
+        <div class="glass-card p-6 md:p-8 rounded-2xl shadow-2xl w-full mx-auto relative">
+            <button id="logout-btn" class="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-transform transform hover:scale-105">
+                Logout
             </button>
-            <img src="https://placehold.co/40x40/000000/FFFFFF?text=P" alt="Profile" class="w-8 h-8 rounded-md cursor-pointer">
-        </div>
-    </header>
+            
+            <!-- Movie Selection Dropdown -->
+            <div class="mb-6 mt-8 flex items-center justify-center space-x-4">
+                <label for="movie" class="text-xl font-medium text-gray-300">Pick a movie:</label>
+                <select id="movie" class="bg-gray-700 border border-gray-600 text-white text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="12">Godzilla x Kong: The New Empire ($12)</option>
+                    <option value="10">Kung Fu Panda 4 ($10)</option>
+                    <option value="15">Dune: Part Two ($15)</option>
+                    <option value="11">Ghostbusters: Frozen Empire ($11)</option>
+                </select>
+            </div>
 
-    <!-- Hero Section -->
-    <main class="relative h-[90vh] flex items-end text-white bg-cover bg-center">
-        <!-- Hero Video Player -->
-        <div class="absolute inset-0 z-0">
-            <iframe id="hero-video"
-                class="w-full h-full object-cover"
-                src="https://www.youtube.com/embed/_p18jp9f1y8?autoplay=1&mute=1&controls=0&loop=1&playlist=_p18jp9f1y8"
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
-        </div>
-        
-        <!-- Video Overlay for Text and Controls -->
-        <div class="relative z-10 w-full h-full flex items-end p-8 md:p-16 bg-gradient-to-t from-black via-transparent to-transparent">
-            <div class="max-w-xl space-y-4">
-                <h2 class="text-4xl md:text-6xl font-extrabold drop-shadow-xl">Hanuman</h2>
-                <p class="text-lg md:text-xl font-medium drop-shadow-lg">In a world steeped in myth and legend, a young hero, empowered by faith, discovers his extraordinary strength to combat a looming darkness and protect his people.</p>
+            <!-- Legend for Seat Status -->
+            <ul class="flex justify-center items-center space-x-6 bg-gray-900/50 p-3 rounded-lg mb-8">
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-gray-700 rounded-t-lg"></div>
+                    <span class="text-sm text-gray-400">Available</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-blue-500 rounded-t-lg" style="background-image: linear-gradient(to top, #3b82f6, #60a5fa);"></div>
+                    <span class="text-sm text-gray-400">Selected</span>
+                </li>
+                <li class="flex items-center space-x-2">
+                    <div class="w-5 h-5 bg-gray-600 rounded-t-lg"></div>
+                    <span class="text-sm text-gray-400">Occupied</span>
+                </li>
+            </ul>
+
+            <!-- Theater Layout -->
+            <div class="container mx-auto">
+                <!-- Screen -->
+                <div class="screen bg-white h-16 w-3/4 mx-auto mb-12 rounded"></div>
+
+                <!-- Seats Grid with Aisles -->
+                <div id="seat-container" class="grid grid-cols-12 gap-x-2 gap-y-3 md:gap-x-4 md:gap-y-4 w-max mx-auto">
+                    <!-- Seats will be generated by JavaScript here -->
+                </div>
+            </div>
+
+            <!-- Booking Summary and Action -->
+            <div class="mt-10 border-t border-gray-700 pt-6 flex flex-col items-center">
+                <p class="text-center text-xl text-gray-300 mb-4">
+                    You have selected <span id="count" class="font-bold text-blue-400">0</span> seats for a total price of $<span id="total" class="font-bold text-blue-400">0</span>
+                </p>
+                <button id="book-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-lg text-lg transition-transform transform hover:scale-105 shadow-lg">
+                    Book Now
+                </button>
             </div>
         </div>
     </main>
-
-    <!-- Movie Rows -->
-    <div class="p-8 md:p-16 -mt-16 relative z-10">
-
-        <!-- Trending Now -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Trending Now</h3>
-            <div id="trending-now-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- Watch Again -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Watch Again</h3>
-            <div id="watch-again-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- New Releases -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">New Releases</h3>
-            <div id="new-releases-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-    </div>
-
-    <!-- Info Modal -->
-    <div id="infoModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-gray-900 rounded-xl p-8 max-w-lg w-full relative transform scale-90 opacity-0 transition-all duration-300 ease-in-out" id="modalContent">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200" id="closeModalBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+    
+    <!-- Booking Confirmation Modal -->
+    <div id="booking-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center hidden">
+        <div class="bg-gray-800 rounded-lg p-8 shadow-xl text-center border border-gray-700">
+            <h2 class="text-2xl font-bold mb-4 text-green-400">Success!</h2>
+            <p id="modal-text" class="text-gray-300 mb-6">Your booking is confirmed.</p>
+            <button id="close-modal-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                Close
             </button>
-            <div id="modalInfoContainer" class="text-center space-y-4">
-                <h3 id="modalTitle" class="text-3xl font-bold"></h3>
-                <p id="modalDescription" class="text-lg text-gray-300"></p>
-                <div id="modalButtons" class="flex justify-center space-x-4 mt-6">
-                    <button id="modalPlayBtn" class="flex items-center px-6 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition-colors duration-200 shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                        </svg>
-                        Play
-                    </button>
-                </div>
-            </div>
-            <div id="modalVideoContainer" class="hidden video-container">
-                <!-- YouTube video iframe will be dynamically added here -->
-            </div>
         </div>
     </div>
 
+
     <script>
-        // Static movie data with emojis and YouTube video IDs
-        const movies = [
-            { id: 1, title: 'Mystic Forge', description: 'An ancient legend awakens, forcing a young blacksmith to forge a legendary weapon and unite a broken kingdom.', emoji: '🔨🔥✨', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 2, title: 'Cosmic Drift', description: 'A lone starship pilot navigates a perilous asteroid field to deliver a critical message that could save all of humanity.', emoji: '🚀🌌🌠', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 3, title: 'Shadow\'s Echo', description: 'A detective with a troubled past must face his greatest fear to solve a series of mysterious disappearances.', emoji: '🕵️‍♂️🌃👤', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 4, title: 'The Silent Key', description: 'A gifted hacker must unravel a complex conspiracy before a powerful organization erases him from existence.', emoji: '💻🔐🤫', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 5, title: 'Forgotten Land', description: 'A team of explorers discovers a long-lost civilization, but they soon realize they are not alone.', emoji: '🗺️🦕🌿', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 6, title: 'Chronos', description: 'A scientist invents a time machine, only to find that changing the past has catastrophic consequences for the future.', emoji: '⏳🕰️🌀', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 7, title: 'The Last Star', description: 'In a dying galaxy, a group of rebels embarks on a desperate mission to reignite a star and save their home.', emoji: '✨⭐💫', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 8, title: 'City of Whispers', description: 'A neo-noir tale of a private investigator hired to find a missing heiress in a city filled with secrets and betrayal.', emoji: '🤫🏙️🔎', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 9, title: 'Echoes of the Past', description: 'A historian uncovers a series of hidden messages in historical artifacts, leading to a forgotten truth that could change the world.', emoji: '📜🏛️🗝️', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 10, title: 'Cyber Pulse', description: 'A cyberpunk thriller about a bounty hunter chasing a rogue AI through the neon-soaked streets of a futuristic city.', emoji: '🤖🌃', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 11, title: 'The Woven Tale', description: 'An animated fantasy following a young weaver who brings her creations to life, but they turn on her and threaten the kingdom.', emoji: '🧵👸🐲', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 12, title: 'Crimson Peak', description: 'A horror story about a young woman who discovers that the old mansion she inherited is home to a dark and violent secret.', emoji: '🩸🏚️👻', category: 'new-releases', videoId: '_p18jp9f1y8' }
-        ];
+        // --- DOM Elements ---
+        // Login Page Elements
+        const loginPage = document.getElementById('login-page');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('login-error');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const trendingRow = document.getElementById('trending-now-row');
-            const watchAgainRow = document.getElementById('watch-again-row');
-            const newReleasesRow = document.getElementById('new-releases-row');
-            const infoModal = document.getElementById('infoModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalPlayBtn = document.getElementById('modalPlayBtn');
-            const modalInfoContainer = document.getElementById('modalInfoContainer');
-            const modalVideoContainer = document.getElementById('modalVideoContainer');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const modalContent = document.getElementById('modalContent');
-            
-            // Function to show the modal
-            const showModal = (title, description, videoId = null) => {
-                // Clear any existing video
-                modalVideoContainer.innerHTML = '';
+        // Main App Elements
+        const appContainer = document.getElementById('app-container');
+        const logoutBtn = document.getElementById('logout-btn');
+        const seatContainer = document.getElementById('seat-container');
+        const movieSelect = document.getElementById('movie');
+        const count = document.getElementById('count');
+        const total = document.getElementById('total');
+        const bookButton = document.getElementById('book-btn');
+        const modal = document.getElementById('booking-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalText = document.getElementById('modal-text');
 
-                // Set content for the info modal
-                modalTitle.textContent = title;
-                modalDescription.textContent = description;
+        let ticketPrice = +movieSelect.value;
 
-                // Handle the "Play" button within the modal
-                if (videoId) {
-                    modalPlayBtn.classList.remove('hidden');
-                    modalPlayBtn.onclick = () => showVideoModal(title, videoId);
+        // --- Seat Generation with Aisles ---
+        function generateSeats() {
+            seatContainer.innerHTML = ''; // Clear existing seats
+            const occupiedSeats = [5, 6, 12, 13, 22, 23, 30, 31, 42, 43, 44, 45]; 
+            let seatIndex = 0;
+
+            for (let i = 0; i < 72; i++) { // 6 rows * 12 columns for aisles
+                const col = i % 12;
+                if (col === 2 || col === 9) { // Adjusted aisle positions
+                    // This is an aisle column
+                    seatContainer.insertAdjacentHTML('beforeend', '<div></div>');
                 } else {
-                    modalPlayBtn.classList.add('hidden');
+                    // This is a seat column
+                    const isOccupied = occupiedSeats.includes(seatIndex);
+                    const seatClass = isOccupied ? 'seat occupied' : 'seat';
+                    const seatHTML = `<div class="${seatClass} w-6 h-5 md:w-8 md:h-6 bg-gray-700 rounded-t-lg"></div>`;
+                    seatContainer.insertAdjacentHTML('beforeend', seatHTML);
+                    seatIndex++;
                 }
+            }
+        }
 
-                // Show the info container and hide the video container
-                modalInfoContainer.classList.remove('hidden');
-                modalVideoContainer.classList.add('hidden');
+        // --- Update Count and Total ---
+        function updateSelectedCount() {
+            const selectedSeats = document.querySelectorAll('#seat-container .seat.selected');
+            const selectedSeatsCount = selectedSeats.length;
+            count.innerText = selectedSeatsCount;
+            total.innerText = selectedSeatsCount * ticketPrice;
+        }
+        
+        // --- Event Listeners ---
+        
+        // Login Form Submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent page reload
+            loginError.classList.add('hidden'); // Hide error on new submission
 
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
-
-            // Function to show the video modal
-            const showVideoModal = (title, videoId) => {
-                // Create and embed the YouTube video
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.className = 'w-full h-full';
-
-                modalVideoContainer.innerHTML = '';
-                modalVideoContainer.appendChild(iframe);
-
-                // Hide the info container and show the video container
-                modalInfoContainer.classList.add('hidden');
-                modalVideoContainer.classList.remove('hidden');
-
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
-
-            // Function to hide the modal
-            const hideModal = () => {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-90', 'opacity-0');
-                // Stop any playing video by clearing the iframe content
-                modalVideoContainer.innerHTML = '';
-                setTimeout(() => {
-                    infoModal.classList.add('hidden');
-                }, 300);
-            };
-
-            // Event listener for closing the modal
-            closeModalBtn.addEventListener('click', hideModal);
-            infoModal.addEventListener('click', (e) => {
-                if (e.target.id === 'infoModal') {
-                    hideModal();
-                }
-            });
-
-            // Function to render movies into a row using emojis and text
-            const renderMovies = (rowElement, category) => {
-                const filteredMovies = movies.filter(movie => movie.category === category);
-                rowElement.innerHTML = ''; // Clear existing content
-                filteredMovies.forEach(movie => {
-                    const movieDiv = document.createElement('div');
-                    movieDiv.className = 'relative flex-shrink-0 w-48 md:w-64 h-64 bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-center items-center p-4 cursor-pointer transform hover:scale-105 transition-transform duration-200 ease-in-out';
-                    
-                    const titleDiv = document.createElement('div');
-                    titleDiv.className = 'text-center z-10';
-
-                    const titleP = document.createElement('p');
-                    titleP.className = 'font-semibold text-lg';
-                    titleP.textContent = movie.title;
-                    titleDiv.appendChild(titleP);
-
-                    movieDiv.appendChild(titleDiv);
-                    rowElement.appendChild(movieDiv);
-
-                    // Add click event listener to each movie card
-                    movieDiv.addEventListener('click', () => {
-                        showModal(movie.title, movie.description, movie.videoId);
-                    });
-                });
-            };
-
-            // Render all the movie rows
-            renderMovies(trendingRow, 'trending');
-            renderMovies(watchAgainRow, 'watch-again');
-            renderMovies(newReleasesRow, 'new-releases');
+            // Basic validation: check if fields are not empty
+            if (usernameInput.value.trim() !== '' && passwordInput.value.trim() !== '') {
+                loginPage.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+            } else {
+                loginError.innerText = 'Please enter both username and password.';
+                loginError.classList.remove('hidden');
+            }
         });
-    </script>
 
+        // Logout Button
+        logoutBtn.addEventListener('click', () => {
+            appContainer.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+            // Clear inputs for security
+            usernameInput.value = '';
+            passwordInput.value = '';
+        });
+
+        movieSelect.addEventListener('change', e => {
+            ticketPrice = +e.target.value;
+            updateSelectedCount();
+        });
+
+        seatContainer.addEventListener('click', e => {
+            if (e.target.classList.contains('seat') && !e.target.classList.contains('occupied')) {
+                e.target.classList.toggle('selected');
+                updateSelectedCount();
+            }
+        });
+
+        bookButton.addEventListener('click', () => {
+            const selectedSeatsCount = document.querySelectorAll('#seat-container .seat.selected').length;
+            if (selectedSeatsCount > 0) {
+                modalText.innerText = `You have successfully booked ${selectedSeatsCount} seat(s).`;
+                modal.classList.remove('hidden');
+            } else {
+                modalText.innerText = 'Please select at least one seat to book.';
+                modal.classList.remove('hidden');
+            }
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+            // Reset selection only if seats were actually booked
+            if(document.querySelectorAll('#seat-container .seat.selected').length > 0){
+                 const selectedSeats = document.querySelectorAll('#seat-container .seat.selected');
+                 selectedSeats.forEach(seat => {
+                    seat.classList.remove('selected');
+                    // Bonus: Make booked seats occupied for this session
+                    seat.classList.add('occupied'); 
+                 });
+                 updateSelectedCount();
+            }
+        });
+
+        // --- Initial Setup ---
+        generateSeats();
+        updateSelectedCount();
+    </script>
 </body>
 </html>
+
