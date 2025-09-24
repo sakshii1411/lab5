@@ -1,302 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Netflix Clone</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
-        }
-        /* Style for the video player aspect ratio */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Netflix Clone</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .video-container { position: relative; width: 100%; padding-bottom: 56.25%; }
+  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+</style>
 </head>
 <body class="bg-black text-white">
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 bg-black bg-opacity-70 backdrop-blur-md">
-        <div class="flex items-center space-x-8">
-            <h1 class="text-4xl font-bold text-red-600">NETFLIX</h1>
-            <nav class="hidden md:flex space-x-4 text-sm text-gray-300">
-                <a href="#" class="hover:text-white transition-colors duration-200">Home</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">TV Shows</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">Movies</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">New & Popular</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">My List</a>
-            </nav>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button class="text-white hover:text-gray-400 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </button>
-            <img src="https://placehold.co/40x40/000000/FFFFFF?text=P" alt="Profile" class="w-8 h-8 rounded-md cursor-pointer">
-        </div>
-    </header>
+<header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 bg-black bg-opacity-70 backdrop-blur-md">
+  <div class="flex items-center space-x-8">
+    <h1 class="text-4xl font-bold text-red-600">NETFLIX</h1>
+    <nav class="hidden md:flex space-x-4 text-sm text-gray-300">
+      <a href="#" class="hover:text-white transition-colors duration-200">Home</a>
+      <a href="#" class="hover:text-white transition-colors duration-200">TV Shows</a>
+      <a href="#" class="hover:text-white transition-colors duration-200">Movies</a>
+      <a href="#" class="hover:text-white transition-colors duration-200">New & Popular</a>
+      <a href="#" class="hover:text-white transition-colors duration-200">My List</a>
+    </nav>
+  </div>
+  <div class="flex items-center space-x-4">
+    <button class="text-white hover:text-gray-400 transition-colors duration-200">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </button>
+    <img src="https://placehold.co/40x40/000000/FFFFFF?text=P" alt="Profile" class="w-8 h-8 rounded-md cursor-pointer">
+  </div>
+</header>
 
-    <!-- Hero Section -->
-    <main class="relative h-[90vh] flex items-end p-8 md:p-16 text-white bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.8)), url('https://placehold.co/1920x1080/1A202C/A0AEC0?text=Cinematic+Still');">
-        <div class="max-w-xl space-y-4">
-            <h2 class="text-4xl md:text-6xl font-extrabold drop-shadow-xl">The Greatest Adventure</h2>
-            <p class="text-lg md:text-xl font-medium drop-shadow-lg">A young hero discovers a hidden world and must embark on an epic quest to save it from a looming darkness.</p>
-            <div class="flex space-x-4 mt-6">
-                <button id="playBtn" class="flex items-center px-6 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition-colors duration-200 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                    </svg>
-                    Play
-                </button>
-                <button id="moreInfoBtn" class="flex items-center px-6 py-2 bg-gray-500 bg-opacity-60 text-white font-semibold rounded-md hover:bg-opacity-80 transition-colors duration-200 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    More Info
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <!-- Movie Rows -->
-    <div class="p-8 md:p-16 -mt-16 relative z-10">
-
-        <!-- Trending Now -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Trending Now</h3>
-            <div id="trending-now-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- Watch Again -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Watch Again</h3>
-            <div id="watch-again-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- New Releases -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">New Releases</h3>
-            <div id="new-releases-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
+<main class="relative h-[90vh] flex items-end text-white bg-cover bg-center">
+  <div class="absolute inset-0 z-0">
+    <iframe id="hero-video" class="w-full h-full object-cover" 
+      src="https://www.youtube.com/embed/ysz5S6PUM-U?autoplay=1&mute=1&controls=0&loop=1&playlist=ysz5S6PUM-U" 
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+  <div class="relative z-10 w-full h-full flex items-end p-8 md:p-16 bg-gradient-to-t from-black via-transparent to-transparent">
+    <div class="max-w-xl space-y-4">
+      <h2 class="text-4xl md:text-6xl font-extrabold drop-shadow-xl">The Greatest Adventure</h2>
+      <p class="text-lg md:text-xl font-medium drop-shadow-lg">A young hero discovers a hidden world and must embark on an epic quest to save it from a looming darkness.</p>
     </div>
+  </div>
+</main>
 
-    <!-- Info Modal -->
-    <div id="infoModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-gray-900 rounded-xl p-8 max-w-lg w-full relative transform scale-90 opacity-0 transition-all duration-300 ease-in-out" id="modalContent">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200" id="closeModalBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <div id="modalInfoContainer" class="text-center space-y-4">
-                <h3 id="modalTitle" class="text-3xl font-bold"></h3>
-                <p id="modalDescription" class="text-lg text-gray-300"></p>
-                <div id="modalButtons" class="flex justify-center space-x-4 mt-6">
-                    <button id="modalPlayBtn" class="flex items-center px-6 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition-colors duration-200 shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                        </svg>
-                        Play
-                    </button>
-                </div>
-            </div>
-            <div id="modalVideoContainer" class="hidden video-container">
-                <!-- YouTube video iframe will be dynamically added here -->
-            </div>
-        </div>
+<div class="p-8 md:p-16 -mt-16 relative z-10">
+  <section class="mb-8">
+    <h3 class="text-2xl font-semibold mb-4">Trending Now</h3>
+    <div id="trending-now-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar"></div>
+  </section>
+</div>
+
+<div id="infoModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden">
+  <div class="bg-gray-900 rounded-xl p-8 max-w-lg w-full relative transform scale-90 opacity-0 transition-all duration-300 ease-in-out" id="modalContent">
+    <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200" id="closeModalBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    <div id="modalInfoContainer" class="text-center space-y-4">
+      <h3 id="modalTitle" class="text-3xl font-bold"></h3>
+      <p id="modalDescription" class="text-lg text-gray-300"></p>
+      <div id="modalButtons" class="flex justify-center space-x-4 mt-6">
+        <button id="modalPlayBtn" class="flex items-center px-6 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition-colors duration-200 shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+          </svg>
+          Play
+        </button>
+      </div>
     </div>
+    <div id="modalVideoContainer" class="hidden video-container"></div>
+  </div>
+</div>
 
-    <script>
-        // Static movie data with emojis and YouTube video IDs
-        const movies = [
-            { id: 1, title: 'Mystic Forge', description: 'An ancient legend awakens, forcing a young blacksmith to forge a legendary weapon and unite a broken kingdom.', emoji: '🔨🔥✨', category: 'trending', videoId: 'e-kR1-D7s-M' },
-            { id: 2, title: 'Cosmic Drift', description: 'A lone starship pilot navigates a perilous asteroid field to deliver a critical message that could save all of humanity.', emoji: '🚀🌌🌠', category: 'trending', videoId: '2J4dFm-jN74' },
-            { id: 3, title: 'Shadow\'s Echo', description: 'A detective with a troubled past must face his greatest fear to solve a series of mysterious disappearances.', emoji: '🕵️‍♂️🌃👤', category: 'trending', videoId: 'dQw4w9WgXcQ' },
-            { id: 4, title: 'The Silent Key', description: 'A gifted hacker must unravel a complex conspiracy before a powerful organization erases him from existence.', emoji: '💻🔐🤫', category: 'trending', videoId: 'dQw4w9WgXcQ' },
-            { id: 5, title: 'Forgotten Land', description: 'A team of explorers discovers a long-lost civilization, but they soon realize they are not alone.', emoji: '🗺️🦕🌿', category: 'trending', videoId: 'b-9X4l3oT2E' },
-            { id: 6, title: 'Chronos', description: 'A scientist invents a time machine, only to find that changing the past has catastrophic consequences for the future.', emoji: '⏳🕰️🌀', category: 'watch-again', videoId: 'y-c_o6K-M10' },
-            { id: 7, title: 'The Last Star', description: 'In a dying galaxy, a group of rebels embarks on a desperate mission to reignite a star and save their home.', emoji: '✨⭐💫', category: 'watch-again', videoId: 't6-WvYy15S8' },
-            { id: 8, title: 'City of Whispers', description: 'A neo-noir tale of a private investigator hired to find a missing heiress in a city filled with secrets and betrayal.', emoji: '🤫🏙️🔎', category: 'watch-again', videoId: 'Oq5uVp45u5M' },
-            { id: 9, title: 'Echoes of the Past', description: 'A historian uncovers a series of hidden messages in historical artifacts, leading to a forgotten truth that could change the world.', emoji: '📜🏛️🗝️', category: 'new-releases', videoId: 'v8wQ7c6aYmY' },
-            { id: 10, title: 'Cyber Pulse', description: 'A cyberpunk thriller about a bounty hunter chasing a rogue AI through the neon-soaked streets of a futuristic city.', emoji: '🤖🌃', category: 'new-releases', videoId: 'sB60gI0zUeA' },
-            { id: 11, title: 'The Woven Tale', description: 'An animated fantasy following a young weaver who brings her creations to life, but they turn on her and threaten the kingdom.', emoji: '🧵👸🐲', category: 'new-releases', videoId: 'XpC6qgC-Y1k' },
-            { id: 12, title: 'Crimson Peak', description: 'A horror story about a young woman who discovers that the old mansion she inherited is home to a dark and violent secret.', emoji: '🩸🏚️👻', category: 'new-releases', videoId: '4M9yKx3J1d0' }
-        ];
+<script>
+const movies = [
+  { id: 1, title: 'Mystic Forge', description: 'An ancient legend awakens...', emoji: '🔨🔥✨', category: 'trending', videoId: 'ysz5S6PUM-U' },
+  { id: 2, title: 'Cosmic Drift', description: 'A lone starship pilot...', emoji: '🚀🌌🌠', category: 'trending', videoId: 'hY7m5jjJ9mM' },
+  { id: 3, title: 'Shadow\'s Echo', description: 'A detective with a troubled past...', emoji: '🕵️‍♂️🌃👤', category: 'trending', videoId: 'J---aiyznGQ' }
+];
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const trendingRow = document.getElementById('trending-now-row');
-            const watchAgainRow = document.getElementById('watch-again-row');
-            const newReleasesRow = document.getElementById('new-releases-row');
-            const infoModal = document.getElementById('infoModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalPlayBtn = document.getElementById('modalPlayBtn');
-            const modalInfoContainer = document.getElementById('modalInfoContainer');
-            const modalVideoContainer = document.getElementById('modalVideoContainer');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const modalContent = document.getElementById('modalContent');
-            const heroPlayBtn = document.getElementById('playBtn');
-            const heroMoreInfoBtn = document.getElementById('moreInfoBtn');
+document.addEventListener('DOMContentLoaded', () => {
+  const trendingRow = document.getElementById('trending-now-row');
+  const infoModal = document.getElementById('infoModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDescription = document.getElementById('modalDescription');
+  const modalPlayBtn = document.getElementById('modalPlayBtn');
+  const modalInfoContainer = document.getElementById('modalInfoContainer');
+  const modalVideoContainer = document.getElementById('modalVideoContainer');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const modalContent = document.getElementById('modalContent');
 
-            let currentVideoId = null;
+  const showModal = (title, description, videoId = null) => {
+    modalVideoContainer.innerHTML = '';
+    modalTitle.textContent = title;
+    modalDescription.textContent = description;
 
-            // Function to show the modal
-            const showModal = (title, description, videoId = null) => {
-                // Clear any existing video
-                modalVideoContainer.innerHTML = '';
+    if (videoId) {
+      modalPlayBtn.classList.remove('hidden');
+      modalPlayBtn.onclick = () => showVideoModal(title, videoId);
+    } else {
+      modalPlayBtn.classList.add('hidden');
+    }
 
-                // Set content for the info modal
-                modalTitle.textContent = title;
-                modalDescription.textContent = description;
+    modalInfoContainer.classList.remove('hidden');
+    modalVideoContainer.classList.add('hidden');
+    infoModal.classList.remove('hidden');
+    setTimeout(() => {
+      modalContent.classList.remove('scale-90', 'opacity-0');
+      modalContent.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  };
 
-                // Handle the "Play" button within the modal
-                if (videoId) {
-                    modalPlayBtn.classList.remove('hidden');
-                    currentVideoId = videoId;
-                } else {
-                    modalPlayBtn.classList.add('hidden');
-                    currentVideoId = null;
-                }
+  const showVideoModal = (title, videoId) => {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&rel=0&origin=${window.location.origin}`;
+    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.className = 'w-full h-full';
 
-                // Show the info container and hide the video container
-                modalInfoContainer.classList.remove('hidden');
-                modalVideoContainer.classList.add('hidden');
+    modalVideoContainer.innerHTML = '';
+    modalVideoContainer.appendChild(iframe);
 
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
+    modalInfoContainer.classList.add('hidden');
+    modalVideoContainer.classList.remove('hidden');
+  };
 
-            // Function to show the video modal
-            const showVideoModal = (title, videoId) => {
-                // Create and embed the YouTube video
-                const iframe = document.createElement('iframe');
-                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.className = 'w-full h-full';
+  const hideModal = () => {
+    modalContent.classList.remove('scale-100', 'opacity-100');
+    modalContent.classList.add('scale-90', 'opacity-0');
+    modalVideoContainer.innerHTML = '';
+    setTimeout(() => infoModal.classList.add('hidden'), 300);
+  };
 
-                modalVideoContainer.innerHTML = '';
-                modalVideoContainer.appendChild(iframe);
+  closeModalBtn.addEventListener('click', hideModal);
+  infoModal.addEventListener('click', (e) => { if(e.target.id==='infoModal') hideModal(); });
 
-                // Hide the info container and show the video container
-                modalInfoContainer.classList.add('hidden');
-                modalVideoContainer.classList.remove('hidden');
+  const renderMovies = (rowElement, category) => {
+    const filtered = movies.filter(m => m.category === category);
+    rowElement.innerHTML = '';
+    filtered.forEach(movie => {
+      const div = document.createElement('div');
+      div.className = 'relative flex-shrink-0 w-48 h-64 bg-gray-800 rounded-lg flex flex-col justify-end items-center p-4 cursor-pointer hover:scale-105 transition-transform';
+      const emoji = document.createElement('span');
+      emoji.className = 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-7xl';
+      emoji.textContent = movie.emoji;
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'text-center z-10';
+      const titleP = document.createElement('p');
+      titleP.className = 'font-semibold text-lg';
+      titleP.textContent = movie.title;
+      titleDiv.appendChild(titleP);
+      div.appendChild(emoji);
+      div.appendChild(titleDiv);
+      rowElement.appendChild(div);
 
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
+      div.addEventListener('click', () => showModal(movie.title, movie.description, movie.videoId));
+    });
+  };
 
-            // Function to hide the modal
-            const hideModal = () => {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-90', 'opacity-0');
-                // Stop any playing video by clearing the iframe content
-                modalVideoContainer.innerHTML = '';
-                setTimeout(() => {
-                    infoModal.classList.add('hidden');
-                }, 300);
-            };
-
-            // Event listeners for hero section buttons
-            heroPlayBtn.addEventListener('click', () => {
-                // Use a generic video for the hero section
-                showVideoModal('The Greatest Adventure', 'dQw4w9WgXcQ'); 
-            });
-
-            heroMoreInfoBtn.addEventListener('click', () => {
-                showModal('The Greatest Adventure', 'A young hero discovers a hidden world and must embark on an epic quest to save it from a looming darkness.');
-            });
-
-            // Event listener for the modal's internal play button
-            modalPlayBtn.addEventListener('click', () => {
-                if (currentVideoId) {
-                    showVideoModal(modalTitle.textContent, currentVideoId);
-                }
-            });
-
-            // Event listener for closing the modal
-            closeModalBtn.addEventListener('click', hideModal);
-            infoModal.addEventListener('click', (e) => {
-                if (e.target.id === 'infoModal') {
-                    hideModal();
-                }
-            });
-
-            // Function to render movies into a row using emojis and text
-            const renderMovies = (rowElement, category) => {
-                const filteredMovies = movies.filter(movie => movie.category === category);
-                rowElement.innerHTML = ''; // Clear existing content
-                filteredMovies.forEach(movie => {
-                    const movieDiv = document.createElement('div');
-                    movieDiv.className = 'relative flex-shrink-0 w-48 md:w-64 h-64 bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-end items-center p-4 cursor-pointer transform hover:scale-105 transition-transform duration-200 ease-in-out';
-                    
-                    const emojiSpan = document.createElement('span');
-                    emojiSpan.className = 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-7xl';
-                    emojiSpan.textContent = movie.emoji;
-
-                    const titleDiv = document.createElement('div');
-                    titleDiv.className = 'text-center z-10';
-
-                    const titleP = document.createElement('p');
-                    titleP.className = 'font-semibold text-lg';
-                    titleP.textContent = movie.title;
-                    titleDiv.appendChild(titleP);
-
-                    movieDiv.appendChild(emojiSpan);
-                    movieDiv.appendChild(titleDiv);
-                    rowElement.appendChild(movieDiv);
-
-                    // Add click event listener to each movie card
-                    movieDiv.addEventListener('click', () => {
-                        showModal(movie.title, movie.description, movie.videoId);
-                    });
-                });
-            };
-
-            // Render all the movie rows
-            renderMovies(trendingRow, 'trending');
-            renderMovies(watchAgainRow, 'watch-again');
-            renderMovies(newReleasesRow, 'new-releases');
-        });
-    </script>
+  renderMovies(trendingRow, 'trending');
+});
+</script>
 
 </body>
 </html>
