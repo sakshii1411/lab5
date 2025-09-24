@@ -244,12 +244,8 @@
                 rowElement.innerHTML = ''; // Clear existing content
                 filteredMovies.forEach(movie => {
                     const movieDiv = document.createElement('div');
-                    movieDiv.className = 'relative flex-shrink-0 w-48 md:w-64 h-64 bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-end items-center p-4 cursor-pointer transform hover:scale-105 transition-transform duration-200 ease-in-out';
+                    movieDiv.className = 'relative flex-shrink-0 w-48 md:w-64 h-64 bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-center items-center p-4 cursor-pointer transform hover:scale-105 transition-transform duration-200 ease-in-out';
                     
-                    const emojiSpan = document.createElement('span');
-                    emojiSpan.className = 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-7xl';
-                    emojiSpan.textContent = movie.emoji;
-
                     const titleDiv = document.createElement('div');
                     titleDiv.className = 'text-center z-10';
 
@@ -258,7 +254,6 @@
                     titleP.textContent = movie.title;
                     titleDiv.appendChild(titleP);
 
-                    movieDiv.appendChild(emojiSpan);
                     movieDiv.appendChild(titleDiv);
                     rowElement.appendChild(movieDiv);
 
