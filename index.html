@@ -174,8 +174,6 @@
             const showModal = (title, description, videoId = null) => {
                 // Clear any existing video
                 modalVideoContainer.innerHTML = '';
-                modalVideoContainer.classList.add('hidden');
-                modalInfoContainer.classList.remove('hidden');
 
                 // Set content for the info modal
                 modalTitle.textContent = title;
@@ -190,6 +188,11 @@
                     currentVideoId = null;
                 }
 
+                // Show the info container and hide the video container
+                modalInfoContainer.classList.remove('hidden');
+                modalVideoContainer.classList.add('hidden');
+
+                // Show the main modal with its animation
                 infoModal.classList.remove('hidden');
                 setTimeout(() => {
                     modalContent.classList.remove('scale-90', 'opacity-0');
@@ -199,10 +202,6 @@
 
             // Function to show the video modal
             const showVideoModal = (title, videoId) => {
-                // Hide the info container
-                modalInfoContainer.classList.add('hidden');
-                modalVideoContainer.classList.remove('hidden');
-
                 // Create and embed the YouTube video
                 const iframe = document.createElement('iframe');
                 iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
@@ -213,6 +212,11 @@
                 modalVideoContainer.innerHTML = '';
                 modalVideoContainer.appendChild(iframe);
 
+                // Hide the info container and show the video container
+                modalInfoContainer.classList.add('hidden');
+                modalVideoContainer.classList.remove('hidden');
+
+                // Show the main modal with its animation
                 infoModal.classList.remove('hidden');
                 setTimeout(() => {
                     modalContent.classList.remove('scale-90', 'opacity-0');
@@ -224,7 +228,7 @@
             const hideModal = () => {
                 modalContent.classList.remove('scale-100', 'opacity-100');
                 modalContent.classList.add('scale-90', 'opacity-0');
-                // Stop any playing video
+                // Stop any playing video by clearing the iframe content
                 modalVideoContainer.innerHTML = '';
                 setTimeout(() => {
                     infoModal.classList.add('hidden');
