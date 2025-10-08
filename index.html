@@ -3,273 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Netflix Clone</title>
-
+    <title>Paws & Pixels - Cute Cat Wallpapers</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Custom styles for a clean, modern look */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #FFF8F0; /* A soft, warm cream background */
         }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
+
+        .gallery-item .overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
-        .hide-scrollbar {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
         }
-        /* Style for the video player aspect ratio */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+
+        /* Add a subtle shadow to images on hover for a lifting effect */
+        .gallery-item img {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Ensure images don't overflow their containers */
+        .gallery-item {
+            break-inside: avoid; /* Prevents items from breaking across columns in masonry layout */
         }
     </style>
 </head>
-<body class="bg-black text-white">
+<body class="text-gray-800">
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-6 bg-black bg-opacity-70 backdrop-blur-md">
-        <div class="flex items-center space-x-8">
-            <h1 class="text-4xl font-bold text-red-600">NETFLIX</h1>
-            <nav class="hidden md:flex space-x-4 text-sm text-gray-300">
-                <a href="#" class="hover:text-white transition-colors duration-200">Home</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">TV Shows</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">Movies</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">New & Popular</a>
-                <a href="#" class="hover:text-white transition-colors duration-200">My List</a>
-            </nav>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button class="text-white hover:text-gray-400 transition-colors duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </button>
-            <img src="https://placehold.co/40x40/000000/FFFFFF?text=P" alt="Profile" class="w-8 h-8 rounded-md cursor-pointer">
-        </div>
+    <!-- Header Section -->
+    <header class="text-center py-12 md:py-16">
+        <h1 class="text-4xl md:text-6xl font-bold text-orange-900 tracking-tight">Paws & Pixels</h1>
+        <p class="mt-4 text-lg md:text-xl text-orange-800">Your daily dose of adorable cat wallpapers.</p>
     </header>
 
-    <!-- Hero Section -->
-    <main class="relative h-[90vh] flex items-end text-white bg-cover bg-center">
-        <!-- Hero Video Player -->
-        <div class="absolute inset-0 z-0">
-            <iframe id="hero-video"
-                class="w-full h-full object-cover"
-                src="https://www.youtube.com/embed/_p18jp9f1y8?autoplay=1&mute=1&controls=0&loop=1&playlist=_p18jp9f1y8"
-                frameborder="0"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-            </iframe>
-        </div>
-        
-        <!-- Video Overlay for Text and Controls -->
-        <div class="relative z-10 w-full h-full flex items-end p-8 md:p-16 bg-gradient-to-t from-black via-transparent to-transparent">
-            <div class="max-w-xl space-y-4">
-                <h2 class="text-4xl md:text-6xl font-extrabold drop-shadow-xl">Hanuman</h2>
-                <p class="text-lg md:text-xl font-medium drop-shadow-lg">In a world steeped in myth and legend, a young hero, empowered by faith, discovers his extraordinary strength to combat a looming darkness and protect his people.</p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Movie Rows -->
-    <div class="p-8 md:p-16 -mt-16 relative z-10">
-
-        <!-- Trending Now -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Trending Now</h3>
-            <div id="trending-now-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- Watch Again -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">Watch Again</h3>
-            <div id="watch-again-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-
-        <!-- New Releases -->
-        <section class="mb-8">
-            <h3 class="text-2xl font-semibold mb-4">New Releases</h3>
-            <div id="new-releases-row" class="flex overflow-x-scroll space-x-4 hide-scrollbar">
-                <!-- Movie posters will be dynamically added here -->
-            </div>
-        </section>
-    </div>
-
-    <!-- Info Modal -->
-    <div id="infoModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden">
-        <div class="bg-gray-900 rounded-xl p-8 max-w-lg w-full relative transform scale-90 opacity-0 transition-all duration-300 ease-in-out" id="modalContent">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors duration-200" id="closeModalBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <div id="modalInfoContainer" class="text-center space-y-4">
-                <h3 id="modalTitle" class="text-3xl font-bold"></h3>
-                <p id="modalDescription" class="text-lg text-gray-300"></p>
-                <div id="modalButtons" class="flex justify-center space-x-4 mt-6">
-                    <button id="modalPlayBtn" class="flex items-center px-6 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition-colors duration-200 shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                        </svg>
-                        Play
+    <!-- Main Content: Wallpaper Gallery -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <!-- Using a CSS columns for a masonry-like effect -->
+        <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-6 space-y-6">
+            
+            <!-- This structure will be repeated for each wallpaper -->
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800" alt="Cute orange tabby kitten looking up" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
                     </button>
                 </div>
             </div>
-            <div id="modalVideoContainer" class="hidden video-container">
-                <!-- YouTube video iframe will be dynamically added here -->
+
+            <!-- More Images -->
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=800" alt="Sleepy kitten in a basket" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
             </div>
+            
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=800" alt="Grey kitten with blue eyes" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=800" alt="Kitten playing with a ball of yarn" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1577023311546-cdc07a8454d9?w=800" alt="Fluffy long-haired cat" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1577023311546-cdc07a8454d9?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800" alt="Two kittens cuddling" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1511044568934-2e9b25e5a32b?w=800" alt="Black cat with green eyes" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1511044568934-2e9b25e5a32b?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1494256997604-768d1f6089b3?w=800" alt="Cat stretching in the sun" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1494256997604-768d1f6089b3?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+             <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?w=800" alt="Siamese cat posing" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1561948955-570b270e7c36?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1570458427-43FF4063C242?w=800" alt="A perfectly square kitten" class="w-full h-auto block rounded-xl" loading="lazy">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1570458427-43FF4063C242?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
         </div>
-    </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-8 border-t border-orange-200">
+        <p class="text-orange-800">&copy; 2024 Paws & Pixels. All cats are virtually cute.</p>
+    </footer>
 
     <script>
-        // Static movie data with emojis and YouTube video IDs
-        const movies = [
-            { id: 1, title: 'Mystic Forge', description: 'An ancient legend awakens, forcing a young blacksmith to forge a legendary weapon and unite a broken kingdom.', emoji: '🔨🔥✨', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 2, title: 'Cosmic Drift', description: 'A lone starship pilot navigates a perilous asteroid field to deliver a critical message that could save all of humanity.', emoji: '🚀🌌🌠', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 3, title: 'Shadow\'s Echo', description: 'A detective with a troubled past must face his greatest fear to solve a series of mysterious disappearances.', emoji: '🕵‍♂🌃👤', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 4, title: 'The Silent Key', description: 'A gifted hacker must unravel a complex conspiracy before a powerful organization erases him from existence.', emoji: '💻🔐🤫', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 5, title: 'Forgotten Land', description: 'A team of explorers discovers a long-lost civilization, but they soon realize they are not alone.', emoji: '🗺🦕🌿', category: 'trending', videoId: '_p18jp9f1y8' },
-            { id: 6, title: 'Chronos', description: 'A scientist invents a time machine, only to find that changing the past has catastrophic consequences for the future.', emoji: '⏳🕰🌀', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 7, title: 'The Last Star', description: 'In a dying galaxy, a group of rebels embarks on a desperate mission to reignite a star and save their home.', emoji: '✨⭐💫', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 8, title: 'City of Whispers', description: 'A neo-noir tale of a private investigator hired to find a missing heiress in a city filled with secrets and betrayal.', emoji: '🤫🏙🔎', category: 'watch-again', videoId: '_p18jp9f1y8' },
-            { id: 9, title: 'Echoes of the Past', description: 'A historian uncovers a series of hidden messages in historical artifacts, leading to a forgotten truth that could change the world.', emoji: '📜🏛🗝', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 10, title: 'Cyber Pulse', description: 'A cyberpunk thriller about a bounty hunter chasing a rogue AI through the neon-soaked streets of a futuristic city.', emoji: '🤖🌃', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 11, title: 'The Woven Tale', description: 'An animated fantasy following a young weaver who brings her creations to life, but they turn on her and threaten the kingdom.', emoji: '🧵👸🐲', category: 'new-releases', videoId: '_p18jp9f1y8' },
-            { id: 12, title: 'Crimson Peak', description: 'A horror story about a young woman who discovers that the old mansion she inherited is home to a dark and violent secret.', emoji: '🩸🏚👻', category: 'new-releases', videoId: '_p18jp9f1y8' }
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const trendingRow = document.getElementById('trending-now-row');
-            const watchAgainRow = document.getElementById('watch-again-row');
-            const newReleasesRow = document.getElementById('new-releases-row');
-            const infoModal = document.getElementById('infoModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDescription = document.getElementById('modalDescription');
-            const modalPlayBtn = document.getElementById('modalPlayBtn');
-            const modalInfoContainer = document.getElementById('modalInfoContainer');
-            const modalVideoContainer = document.getElementById('modalVideoContainer');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const modalContent = document.getElementById('modalContent');
-            
-            // Function to show the modal
-            const showModal = (title, description, videoId = null) => {
-                // Clear any existing video
-                modalVideoContainer.innerHTML = '';
-
-                // Set content for the info modal
-                modalTitle.textContent = title;
-                modalDescription.textContent = description;
-
-                // Handle the "Play" button within the modal
-                if (videoId) {
-                    modalPlayBtn.classList.remove('hidden');
-                    modalPlayBtn.onclick = () => showVideoModal(title, videoId);
-                } else {
-                    modalPlayBtn.classList.add('hidden');
-                }
-
-                // Show the info container and hide the video container
-                modalInfoContainer.classList.remove('hidden');
-                modalVideoContainer.classList.add('hidden');
-
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
-
-            // Function to show the video modal
-            const showVideoModal = (title, videoId) => {
-                // Create and embed the YouTube video
-                const iframe = document.createElement('iframe');
-                iframe.src = https://www.youtube.com/embed/${videoId}?autoplay=1;
-                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-                iframe.setAttribute('allowfullscreen', '');
-                iframe.className = 'w-full h-full';
-
-                modalVideoContainer.innerHTML = '';
-                modalVideoContainer.appendChild(iframe);
-
-                // Hide the info container and show the video container
-                modalInfoContainer.classList.add('hidden');
-                modalVideoContainer.classList.remove('hidden');
-
-                // Show the main modal with its animation
-                infoModal.classList.remove('hidden');
-                setTimeout(() => {
-                    modalContent.classList.remove('scale-90', 'opacity-0');
-                    modalContent.classList.add('scale-100', 'opacity-100');
-                }, 10);
-            };
-
-            // Function to hide the modal
-            const hideModal = () => {
-                modalContent.classList.remove('scale-100', 'opacity-100');
-                modalContent.classList.add('scale-90', 'opacity-0');
-                // Stop any playing video by clearing the iframe content
-                modalVideoContainer.innerHTML = '';
-                setTimeout(() => {
-                    infoModal.classList.add('hidden');
-                }, 300);
-            };
-
-            // Event listener for closing the modal
-            closeModalBtn.addEventListener('click', hideModal);
-            infoModal.addEventListener('click', (e) => {
-                if (e.target.id === 'infoModal') {
-                    hideModal();
-                }
-            });
-
-            // Function to render movies into a row using emojis and text
-            const renderMovies = (rowElement, category) => {
-                const filteredMovies = movies.filter(movie => movie.category === category);
-                rowElement.innerHTML = ''; // Clear existing content
-                filteredMovies.forEach(movie => {
-                    const movieDiv = document.createElement('div');
-                    movieDiv.className = 'relative flex-shrink-0 w-48 md:w-64 h-64 bg-gray-800 rounded-lg shadow-lg overflow-hidden flex flex-col justify-center items-center p-4 cursor-pointer transform hover:scale-105 transition-transform duration-200 ease-in-out';
-                    
-                    const titleDiv = document.createElement('div');
-                    titleDiv.className = 'text-center z-10';
-
-                    const titleP = document.createElement('p');
-                    titleP.className = 'font-semibold text-lg';
-                    titleP.textContent = movie.title;
-                    titleDiv.appendChild(titleP);
-
-                    movieDiv.appendChild(titleDiv);
-                    rowElement.appendChild(movieDiv);
-
-                    // Add click event listener to each movie card
-                    movieDiv.addEventListener('click', () => {
-                        showModal(movie.title, movie.description, movie.videoId);
-                    });
-                });
-            };
-
-            // Render all the movie rows
-            renderMovies(trendingRow, 'trending');
-            renderMovies(watchAgainRow, 'watch-again');
-            renderMovies(newReleasesRow, 'new-releases');
-        });
+        // A simple function to open the image in a new tab for saving/downloading.
+        function downloadImage(url) {
+            window.open(url, '_blank');
+        }
     </script>
-
 </body>
 </html>
+
