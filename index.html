@@ -3,262 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Paws & Pixels - Cute Dog Wallpapers</title>
+    
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* Custom styles for smooth transitions and a clean look */
+        /* Custom styles for a clean, modern look */
         body {
             font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            background-color: #FFF8F0; /* A soft, warm cream background */
         }
 
-        /* Fade-in animation for modal */
-        .modal-fade-enter {
+        .gallery-item .overlay {
             opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
-        .modal-fade-enter-active {
-            opacity: 1;
-            transition: opacity 300ms;
-        }
-        .modal-fade-leave {
+
+        .gallery-item:hover .overlay {
             opacity: 1;
         }
-        .modal-fade-leave-active {
-            opacity: 0;
-            transition: opacity 300ms;
+
+        /* Add a subtle shadow to images on hover for a lifting effect */
+        .gallery-item img {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1);
         }
 
-        /* Scale animation for modal content */
-        .modal-scale-enter {
-            transform: scale(0.9);
-        }
-        .modal-scale-enter-active {
-            transform: scale(1);
-            transition: transform 300ms;
-        }
-        .modal-scale-leave {
-            transform: scale(1);
-        }
-        .modal-scale-leave-active {
-            transform: scale(0.9);
-            transition: transform 300ms;
-        }
-
-        /* Prevent background scroll when modal is open */
-        .modal-open {
-            overflow: hidden;
+        /* Ensure images don't overflow their containers */
+        .gallery-item {
+            break-inside: avoid; /* Prevents items from breaking across columns in masonry layout */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="text-gray-800">
 
-    <div class="container mx-auto px-4 py-8 sm:py-12 lg:py-16">
-        <!-- Header -->
-        <header class="text-center mb-8 md:mb-12">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">Image Gallery</h1>
-            <p class="mt-3 text-lg text-gray-400 max-w-2xl mx-auto">A curated collection of beautiful moments captured in time.</p>
-        </header>
+    <!-- Header Section -->
+    <header class="text-center py-12 md:py-16">
+        <h1 class="text-4xl md:text-6xl font-bold text-orange-900 tracking-tight">Paws & Pixels</h1>
+        <p class="mt-4 text-lg md:text-xl text-orange-800">Your daily dose of adorable dog wallpapers.</p>
+    </header>
 
-        <!-- Image Grid -->
-        <div id="image-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            <!-- Images will be dynamically inserted here by JavaScript -->
-        </div>
-    </div>
-
-    <!-- Modal/Lightbox -->
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden modal-fade-enter">
-        <div id="modal-content" class="relative bg-gray-900 rounded-lg shadow-xl w-full max-w-4xl max-h-full overflow-hidden flex flex-col modal-scale-enter">
-            <!-- Modal Header for caption and close button -->
-            <div class="p-4 flex justify-between items-center border-b border-gray-700">
-                <div class="text-left">
-                    <h2 id="modal-title" class="text-lg font-semibold text-white"></h2>
-                    <p id="modal-description" class="text-sm text-gray-400"></p>
+    <!-- Main Content: Wallpaper Gallery -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <!-- Using a CSS columns for a masonry-like effect -->
+        <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-6 space-y-6">
+            
+            <!-- This structure will be repeated for each wallpaper -->
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800" alt="Cute golden retriever puppy looking up" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
                 </div>
-                <button id="close-modal" class="text-gray-400 hover:text-white transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+            </div>
+
+            <!-- More Images -->
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800" alt="Sleepy pug puppy with tongue out" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1000/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
             </div>
             
-            <!-- Modal Body for image -->
-            <div class="flex-grow flex items-center justify-center p-4">
-                <img id="modal-image" src="" alt="Full-size view" class="max-w-full max-h-[75vh] object-contain rounded-md">
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800" alt="Happy Corgi sitting on the grass" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1000/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
             </div>
 
-             <!-- Navigation Buttons -->
-            <button id="prev-button" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-opacity">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-            </button>
-            <button id="next-button" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-opacity">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-            </button>
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800" alt="A smart-looking dog with glasses" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1000/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=800" alt="Fluffy white Samoyed dog smiling" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1000/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1552053831-71594a27632d?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1523626752472-b55a628f1acc?w=800" alt="Two golden retriever puppies playing together" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1523626752472-b55a628f1acc?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=800" alt="Curious French bulldog with a tilted head" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1000/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800" alt="Dog wearing heart-shaped sunglasses in the sun" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+             <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800" alt="Cute Dachshund puppy posing" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="gallery-item relative overflow-hidden rounded-xl group cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1598133894008-61f75d58432f?w=800" alt="Dog catching a treat with a funny face" class="w-full h-auto block rounded-xl" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/800x1200/FFF8F0/orange?text=Dog+Gone';">
+                <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl">
+                    <button onclick="downloadImage('https://images.unsplash.com/photo-1598133894008-61f75d58432f?w=800')" class="text-white bg-orange-500 hover:bg-orange-600 transition-colors font-semibold py-2 px-5 rounded-full shadow-lg flex items-center space-x-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+            
         </div>
-    </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="text-center py-8 mt-8 border-t border-orange-200">
+        <p class="text-orange-800">&copy; 2025 Paws & Pixels. All dogs are virtually cute.</p>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- DATA ---
-            // Array of image objects. You can easily add or remove images here.
-            const images = [
-                { src: 'https://placehold.co/600x400/3498db/ffffff?text=Landscape', title: 'Mountain View', description: 'A serene view of mountains at dawn.' },
-                { src: 'https://placehold.co/600x400/e74c3c/ffffff?text=Architecture', title: 'City Architecture', description: 'Modern architecture in the city center.' },
-                { src: 'https://placehold.co/600x400/2ecc71/ffffff?text=Nature', title: 'Forest Path', description: 'A quiet path through a lush green forest.' },
-                { src: 'https://placehold.co/600x400/f1c40f/ffffff?text=Ocean', title: 'Sunny Beach', description: 'Golden sands and clear blue water.' },
-                { src: 'https://placehold.co/600x400/9b59b6/ffffff?text=Portrait', title: 'Street Portrait', description: 'A candid moment on a busy street.' },
-                { src: 'https://placehold.co/600x400/1abc9c/ffffff?text=Wildlife', title: 'Wild Fox', description: 'A fox captured in its natural habitat.' },
-                { src: 'https://placehold.co/600x400/d35400/ffffff?text=Travel', title: 'Ancient Ruins', description: 'Exploring the ruins of a forgotten time.' },
-                { src: 'https://placehold.co/600x400/34495e/ffffff?text=Abstract', title: 'Abstract Art', description: 'Colors and shapes in motion.' },
-                { src: 'https://placehold.co/600x400/7f8c8d/ffffff?text=Monochrome', title: 'Black & White', description: 'A study in light and shadow.' },
-                { src: 'https://placehold.co/600x400/c0392b/ffffff?text=Food', title: 'Delicious Meal', description: 'Artfully prepared culinary delight.' },
-                { src: 'https://placehold.co/600x400/8e44ad/ffffff?text=Technology', title: 'Circuit Board', description: 'The intricate world of electronics.' },
-                { src: 'https://placehold.co/600x400/2980b9/ffffff?text=Space', title: 'Galaxy', description: 'A glimpse into the vast universe.' },
-            ];
-
-            // --- DOM Elements ---
-            const grid = document.getElementById('image-grid');
-            const modal = document.getElementById('modal');
-            const modalContent = document.getElementById('modal-content');
-            const modalImg = document.getElementById('modal-image');
-            const modalTitle = document.getElementById('modal-title');
-            const modalDescription = document.getElementById('modal-description');
-            const closeModalBtn = document.getElementById('close-modal');
-            const prevBtn = document.getElementById('prev-button');
-            const nextBtn = document.getElementById('next-button');
-
-            let currentIndex = 0;
-
-            // --- FUNCTIONS ---
-
-            /**
-             * Populates the grid with image thumbnails.
-             */
-            function populateGrid() {
-                grid.innerHTML = images.map((img, index) => `
-                    <div class="group cursor-pointer overflow-hidden rounded-lg shadow-lg" data-index="${index}">
-                        <img src="${img.src}" alt="${img.title}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
-                            <p class="text-white text-center font-semibold">${img.title}</p>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            /**
-             * Opens the modal and displays the selected image.
-             * @param {number} index - The index of the image to display.
-             */
-            function openModal(index) {
-                if (index < 0 || index >= images.length) return;
-                currentIndex = index;
-                const image = images[currentIndex];
-                
-                modalImg.src = image.src;
-                modalImg.alt = image.title;
-                modalTitle.textContent = image.title;
-                modalDescription.textContent = image.description;
-
-                document.body.classList.add('modal-open');
-                modal.classList.remove('hidden');
-                
-                // Trigger enter animations
-                modal.classList.add('modal-fade-enter-active');
-                modalContent.classList.add('modal-scale-enter-active');
-
-                // Remove animation classes after they complete
-                setTimeout(() => {
-                    modal.classList.remove('modal-fade-enter', 'modal-fade-enter-active');
-                    modalContent.classList.remove('modal-scale-enter', 'modal-scale-enter-active');
-                }, 300);
-            }
-
-            /**
-             * Closes the modal.
-             */
-            function closeModal() {
-                 // Trigger leave animations
-                modal.classList.add('modal-fade-leave-active');
-                modalContent.classList.add('modal-scale-leave-active');
-
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    document.body.classList.remove('modal-open');
-
-                    // Reset for next open
-                    modal.classList.remove('modal-fade-leave-active');
-                    modalContent.classList.remove('modal-scale-leave-active');
-                    modal.classList.add('modal-fade-enter');
-                    modalContent.classList.add('modal-scale-enter');
-                }, 300);
-            }
-
-            /**
-             * Shows the next image in the modal.
-             */
-            function showNextImage() {
-                openModal((currentIndex + 1) % images.length);
-            }
-
-            /**
-             * Shows the previous image in the modal.
-             */
-            function showPrevImage() {
-                openModal((currentIndex - 1 + images.length) % images.length);
-            }
-            
-            /**
-             * Handles keyboard navigation.
-             * @param {KeyboardEvent} e - The keyboard event.
-             */
-            function handleKeyDown(e) {
-                if (modal.classList.contains('hidden')) return;
-                if (e.key === 'ArrowRight') {
-                    showNextImage();
-                } else if (e.key === 'ArrowLeft') {
-                    showPrevImage();
-                } else if (e.key === 'Escape') {
-                    closeModal();
-                }
-            }
-
-
-            // --- EVENT LISTENERS ---
-
-            // Click on an image in the grid
-            grid.addEventListener('click', function (e) {
-                const target = e.target.closest('[data-index]');
-                if (target) {
-                    const index = parseInt(target.dataset.index, 10);
-                    openModal(index);
-                }
-            });
-
-            // Close modal button
-            closeModalBtn.addEventListener('click', closeModal);
-
-            // Close modal by clicking on the background
-            modal.addEventListener('click', function (e) {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-            
-            // Navigation buttons
-            nextBtn.addEventListener('click', showNextImage);
-            prevBtn.addEventListener('click', showPrevImage);
-            
-            // Keyboard navigation
-            document.addEventListener('keydown', handleKeyDown);
-
-            // --- INITIALIZATION ---
-            populateGrid();
-        });
+        // A simple function to open the image in a new tab for saving/downloading.
+        function downloadImage(url) {
+            window.open(url, '_blank');
+        }
     </script>
-
 </body>
 </html>
